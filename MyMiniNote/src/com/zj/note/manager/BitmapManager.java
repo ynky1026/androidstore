@@ -180,7 +180,6 @@ public class BitmapManager {
 		matrix.setScale(scaleX, scaleY);
 		Canvas canvas = new Canvas(bitmap);
 		canvas.drawBitmap(resource, matrix, null);
-
 		return bitmap;
 	}
 
@@ -196,7 +195,6 @@ public class BitmapManager {
 		Options opts = new Options();
 		opts.inJustDecodeBounds = true;
 		String path = bmFile.getAbsolutePath();
-		// BitmapFactory.decodeFile(path, opts);
 		BitmapFactory.decodeFile(path, opts);
 		if (opts.outWidth * opts.outHeight <= width * height) {
 			return BitmapFactory.decodeFile(path);
@@ -295,7 +293,7 @@ public class BitmapManager {
 		if (flag) {// 所有余数都为0 则参数即是2的整数次幂
 			return inSampleSize;
 		}
-
+		//取最接近的2的整数次幂
 		int outSampleSize = (int) (Math.abs(Math.pow(2, i) - inSampleSize) > Math
 				.abs(Math.pow(2, i + 1) - inSampleSize) ? Math.pow(2, i + 1)
 				: Math.pow(2, i));
