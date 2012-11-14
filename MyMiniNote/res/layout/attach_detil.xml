@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:esp="http://schemas.android.com/apk/res/com.eightSpace.views"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:esp="http://schemas.android.com/apk/res/com.eightSpace.views"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <com.zj.note.widget.ScrollImageView
+            android:id="@+id/scrolliv"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scaleType="fitCenter"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scaleType="center"
+            android:src="@drawable/icon_photo_big"
+            android:visibility="visible" />
+        <!--
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/hint"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:background="#000000"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="点击拍照"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+        -->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/btnbar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="9"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/toLeft"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="5dip"
+            android:layout_marginLeft="5dip"
+            android:layout_weight="1"
+            android:background="@drawable/turnleft_btn_selector" />
+
+        <ImageButton
+            android:id="@+id/toRight"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="5dip"
+            android:layout_marginLeft="5dip"
+            android:layout_weight="1"
+            android:background="@drawable/turnright_btn_selector" />
+
+        <ImageButton
+            android:id="@+id/save"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="5dip"
+            android:layout_marginLeft="5dip"
+            android:layout_weight="1"
+            android:background="@drawable/save_b_btn_selector" />
+
+        <ImageButton
+            android:id="@+id/del"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="5dip"
+            android:layout_marginLeft="5dip"
+            android:layout_weight="1"
+            android:background="@drawable/del_btn_selector" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:esp="http://schemas.android.com/apk/res/com.zj.note"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <com.zj.note.widget.MyGestureView
+        android:id="@+id/gestures"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.5"
+        android:background="#00000000"
+        esp:fadeOffset="500"
+        esp:gestureColor="#000000" >
+
+        <ListView
+            android:id="@+id/lv"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#FFFFFF"
+            android:cacheColorHint="#00000000"
+            android:divider="@null"
+            android:dividerHeight="0px"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:listSelector="#00000000" >
+        </ListView>
+    </com.zj.note.widget.MyGestureView>
+
+    <LinearLayout
+        style="@android:style/ButtonBar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="3.5"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/enter"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="7dip"
+            android:layout_marginLeft="5dip"
+            android:layout_marginTop="5dip"
+            android:layout_weight="1"
+            android:background="@drawable/enter_btn_selector" />
+
+        <ImageButton
+            android:id="@+id/space"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="7dip"
+            android:layout_marginLeft="5dip"
+            android:layout_marginTop="5dip"
+            android:layout_weight="1"
+            android:background="@drawable/space_btn_selector" />
+
+        <ImageButton
+            android:id="@+id/delete"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="7dip"
+            android:layout_marginLeft="5dip"
+            android:layout_marginTop="5dip"
+            android:layout_weight="1"
+            android:background="@drawable/backspace_btn_selector" />
+
+        <ImageButton
+            android:id="@+id/save"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="7dip"
+            android:layout_marginLeft="5dip"
+            android:layout_marginTop="5dip"
+            android:layout_weight="1"
+            android:background="@drawable/save_btn_selector" />
+    </LinearLayout>
+
+</LinearLayout>
