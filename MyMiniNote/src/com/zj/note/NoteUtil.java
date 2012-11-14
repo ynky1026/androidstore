@@ -5,13 +5,14 @@ import java.io.Serializable;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.StatFs;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.zj.note.audio.RecordActivity;
-import com.zj.note.camera.CameraImgActivity;
 import com.zj.note.check.AttachListCheck;
 import com.zj.note.check.ImgAttachDetailCheck;
 import com.zj.note.check.NoteListCheck;
@@ -55,6 +56,11 @@ public class NoteUtil implements Serializable {
      * 手写输入requestcode
      */
     public static final int REQUEST_CODE_GESTURE = 3;
+
+    /**
+     * 图片编辑requestcode
+     */
+    public static final int REQUEST_CODE_PIC_EDIT = 4;
 
     /**
      * 弹出窗接口
@@ -138,19 +144,9 @@ public class NoteUtil implements Serializable {
      * @param filePath
      */
     public void openCamere(Activity activity, String dirPath) {
-        DisplayMetrics metrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        FileManager fileUtil = new FileManager(dirPath);
-        int screenHeight = metrics.heightPixels;
-        int screenWidth = metrics.widthPixels;
-        Intent cameraIntent = new Intent(activity, CameraImgActivity.class);
-        cameraIntent.putExtra(ConstantValue.DIR_PATH, dirPath);
-        cameraIntent.putExtra(ConstantValue.NOTE_UTIL, this);
-        cameraIntent.putExtra(ConstantValue.SCREEN_WIDTH, screenWidth);
-        cameraIntent.putExtra(ConstantValue.SCREEN_HEIGHT, screenHeight);
-        cameraIntent.putExtra(ConstantValue.FILE_UTIL, fileUtil);
-        activity.startActivityForResult(cameraIntent,
-            NoteUtil.REQUEST_CODE_CAMERE);
+        Intent it = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        it.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(dirPath)));
+        activity.startActivityForResult(it, NoteUtil.REQUEST_CODE_CAMERE);
 
     }
 
@@ -212,6 +208,7 @@ public class NoteUtil implements Serializable {
 
     /**
      * 打开图片查看界面
+     * 
      * @param activity
      * @param dirPath
      * @param fileName

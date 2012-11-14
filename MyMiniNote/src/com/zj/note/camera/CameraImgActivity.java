@@ -6,21 +6,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.provider.MediaStore.Images.Media;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.zj.note.CommonUtil;
 import com.zj.note.ConstantValue;
 import com.zj.note.MessageValue;
 import com.zj.note.NoteUtil;
@@ -39,11 +30,6 @@ public class CameraImgActivity extends ImgAttachDetailCheck {
     private static final String TAG = "CameraImgActivity";
 
     /**
-     * ImageView
-     */
-    private ImageView iv;
-
-    /**
      * 图片路径
      */
     protected String filePath;
@@ -57,11 +43,6 @@ public class CameraImgActivity extends ImgAttachDetailCheck {
      * 图片名称
      */
     protected String fileName;
-
-    /**
-     * 照片存放的路径
-     */
-    private String tmpPicPath;
 
     /**
      * 笔记工具类
@@ -88,10 +69,6 @@ public class CameraImgActivity extends ImgAttachDetailCheck {
      */
     protected FileManager fileUtil;
 
-    /**
-     * 图片处理线程广播接收器
-     */
-    private BitmapProcessReceiver bitmapReceiver;
 
     /**
      * 图片保存广播接收器
@@ -117,8 +94,6 @@ public class CameraImgActivity extends ImgAttachDetailCheck {
      * 提示图片
      */
     protected int hintDrawable = R.drawable.icon_photo_big;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,7 +129,6 @@ public class CameraImgActivity extends ImgAttachDetailCheck {
         delBtn = ( ImageButton ) findViewById(R.id.del);
 
         btnBar = ( LinearLayout ) findViewById(R.id.btnbar);
-        btnBar.setVisibility(View.INVISIBLE);
 
         leftBtn.setOnClickListener(listener);
         rightBtn.setOnClickListener(listener);
@@ -165,80 +139,48 @@ public class CameraImgActivity extends ImgAttachDetailCheck {
         // leftBtn.setEnabled(false);
         // rightBtn.setEnabled(false);
 
-        bitmapReceiver = new BitmapProcessReceiver();
-        IntentFilter ift = new IntentFilter(ConstantValue.BITMAP_PROCESS_RESULT);
-        registerReceiver(bitmapReceiver, ift);
-
         imgReceiver = new ImgSaveReceiver();
         IntentFilter imgIft = new IntentFilter(ConstantValue.IMG_SAVE_RESULT);
         registerReceiver(imgReceiver, imgIft);
-        iv = ( ImageView ) findViewById(R.id.iv);
-        iv.setVisibility(View.VISIBLE);
-        siv.setVisibility(View.GONE);
-        iv.setImageResource(hintDrawable);
-        iv.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (isOpen) {
-                    openSysActivity();
-                }
-            }
-        });
     }
 
 
 
-    protected void openSysActivity() {
-        if (dirPath.startsWith(ConstantValue.SD_DIR_PATH)) {
-            tmpPicPath = dirPath + System.currentTimeMillis()
-                + ConstantValue.FILE_EX_NAME_PNG;
-        } else {
-            tmpPicPath = ConstantValue.SD_DIR_PATH + dirPath
-                + System.currentTimeMillis() + ConstantValue.FILE_EX_NAME_PNG;
-        }
 
-        Intent it = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        it.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(tmpPicPath)));
-        startActivityForResult(it, NoteUtil.REQUEST_CODE_CAMERE);
-    }
-
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // 此次没有采用android一般写法 从data中取得uri在取得path 因为三星手机data为null
-        if (resultCode == RESULT_OK) {
-
-            Intent it = new Intent(this, NoteService.class);
-            it.putExtra(ConstantValue.BITMAP_PROCESS, "");
-            it.putExtra(ConstantValue.FILE_PATH, tmpPicPath);
-            it.putExtra(ConstantValue.SCREEN_WIDTH, screenWidth);
-            it.putExtra(ConstantValue.SCREEN_HEIGHT, screenHeight);
-            it.putExtra(ConstantValue.FILE_UTIL, fileUtil);
-            it.putExtra(ConstantValue.ACTION_CAMERA, "");
-            if (CommonUtil.getAndroidSDKVersion() < 14) {
-                Cursor c = this.getContentResolver().query(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null,
-                    null, Media.DATE_MODIFIED + " desc");
-
-                if (c.moveToFirst()) {
-                    String filePath = c.getString(c.getColumnIndex(Media.DATA));
-                    Log.d(TAG, "real path is " + filePath);
-
-                    File file = new File(filePath);
-                    file.delete();
-                    
-                }
-            }
-
-            startService(it);
-            mDialogUtil.showProgress(this, MessageValue.TITLE_WAIT,
-                MessageValue.SAVING_ATTACH, false);
-
-        }
-    }
+    // @Override
+    // protected void onActivityResult(int requestCode, int resultCode, Intent
+    // data) {
+    // super.onActivityResult(requestCode, resultCode, data);
+    // // 此次没有采用android一般写法 从data中取得uri在取得path 因为三星手机data为null
+    // if (resultCode == RESULT_OK) {
+    // Intent it = new Intent(this, NoteService.class);
+    // it.putExtra(ConstantValue.BITMAP_PROCESS, "");
+    // it.putExtra(ConstantValue.FILE_PATH, tmpPicPath);
+    // it.putExtra(ConstantValue.SCREEN_WIDTH, screenWidth);
+    // it.putExtra(ConstantValue.SCREEN_HEIGHT, screenHeight);
+    // it.putExtra(ConstantValue.FILE_UTIL, fileUtil);
+    // it.putExtra(ConstantValue.ACTION_CAMERA, "");
+    // if (CommonUtil.getAndroidSDKVersion() < 14) {
+    // Cursor c = this.getContentResolver().query(
+    // MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null,
+    // null, Media.DATE_MODIFIED + " desc");
+    //
+    // if (c.moveToFirst()) {
+    // String filePath = c.getString(c.getColumnIndex(Media.DATA));
+    // Log.d(TAG, "real path is " + filePath);
+    //
+    // File file = new File(filePath);
+    // file.delete();
+    //
+    // }
+    // }
+    //
+    // startService(it);
+    // mDialogUtil.showProgress(this, MessageValue.TITLE_WAIT,
+    // MessageValue.SAVING_ATTACH, false);
+    //
+    // }
+    // }
 
 
 
@@ -261,20 +203,13 @@ public class CameraImgActivity extends ImgAttachDetailCheck {
     protected void del() {
         File file = new File(filePath);
         file.delete();
-        iv.setVisibility(View.VISIBLE);
-        isOpen = true;
-        siv.setVisibility(View.GONE);
-        btnBar.setVisibility(View.GONE);
+        finish();
     }
 
 
 
     @Override
     public void finish() {
-        if (bitmapReceiver != null) {
-            unregisterReceiver(bitmapReceiver);
-            bitmapReceiver = null;
-        }
         if (imgReceiver != null) {
             unregisterReceiver(imgReceiver);
             imgReceiver = null;
@@ -285,54 +220,6 @@ public class CameraImgActivity extends ImgAttachDetailCheck {
             this.setResult(state, it);
         }
         super.finish();
-    }
-
-    protected class BitmapProcessReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            try {
-                mDialogUtil.dismissProgress();
-                if (intent.hasExtra(ConstantValue.RESULT_ERR)) {
-                    Toast.makeText(CameraImgActivity.this,
-                        MessageValue.ADD_ATTACH_FAILED, Toast.LENGTH_LONG)
-                        .show();
-                } else {
-                    saveBtn.setEnabled(true);
-                    leftBtn.setEnabled(true);
-                    rightBtn.setEnabled(true);
-                    Toast.makeText(CameraImgActivity.this,
-                        MessageValue.ADD_ATTACH_SUC, Toast.LENGTH_LONG).show();
-                    String bitmapFilePath = null;
-                    if (dirPath.startsWith(ConstantValue.SD_DIR_PATH)) {
-                        bitmapFilePath = dirPath
-                            + intent
-                                .getStringExtra(ConstantValue.BITMAP_FILE_PATH);
-                    } else {
-                        bitmapFilePath = ConstantValue.SD_DIR_PATH
-                            + dirPath
-                            + intent
-                                .getStringExtra(ConstantValue.BITMAP_FILE_PATH);
-                    }
-
-                    filePath = bitmapFilePath;
-                    Log.d(TAG, filePath);
-                    fileName = filePath.substring(
-                        filePath.lastIndexOf("/") + 1, filePath.length());
-                    bitmapFile = new File(bitmapFilePath);
-                    bitmap = BitmapFactory.decodeFile(bitmapFilePath);
-                    siv.setImageBitmap(bitmap);
-                    state = RESULT_OK;
-                    btnBar.setVisibility(View.VISIBLE);
-                    isOpen = false;
-                    iv.setVisibility(View.GONE);
-                    siv.setVisibility(View.VISIBLE);
-                }
-            } catch (Throwable e) {
-                Log.e(TAG, "on receive exception", e);
-            }
-        }
-
     }
 
     protected class ImgSaveReceiver extends BroadcastReceiver {

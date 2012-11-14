@@ -271,4 +271,14 @@ public class ConstantValue {
      * sd卡最小空间
      */
     public static final long MIN_SDCARD_SPACE = 3145728;
+    
+    /**
+     * 照片路径
+     */
+    public static final String CAMERA_PIC_TMP_PATH = "cameraPicPath";
+    
+    /**
+     * 缩放处理后的照片
+     */
+    public static final String CAMERA_BIT_TMP_PATH = "cameraBitPath";
 }

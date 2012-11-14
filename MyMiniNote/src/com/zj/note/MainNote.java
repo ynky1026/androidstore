@@ -7,9 +7,15 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Images.Media;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -19,8 +25,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.zj.note.camera.CameraImgActivity;
 import com.zj.note.manager.FileManager;
 import com.zj.note.picture.PicImgActivity;
+import com.zj.note.service.NoteService;
 
 /**
  * 新建笔记界面 simple introduction
@@ -100,6 +108,11 @@ public class MainNote extends NoteBaseActivity {
     private FileManager fileUtil;
 
     /**
+     * 图片处理线程广播接收器
+     */
+    private BitmapProcessReceiver bitmapReceiver;
+
+    /**
      * 是否保存
      */
     private boolean hasSaved;
@@ -149,7 +162,10 @@ public class MainNote extends NoteBaseActivity {
      */
     private List<File> currentFiles = new ArrayList<File>();
 
-
+    /**
+     * 照片的临时路径
+     */
+    private String tmpPicPath = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,7 +219,9 @@ public class MainNote extends NoteBaseActivity {
         screenWidth = metrics.widthPixels;
 
         mDialogUtil = new DialogUtil(NoteUtil.mDialogInterface);
-
+        bitmapReceiver = new BitmapProcessReceiver();
+        IntentFilter ift = new IntentFilter(ConstantValue.BITMAP_PROCESS_RESULT);
+        registerReceiver(bitmapReceiver, ift);
         // receiver = new BitmapProcessReceiver();
         // IntentFilter ift = new
         // IntentFilter(ConstantValue.BITMAP_PROCESS_RESULT);
@@ -253,7 +271,15 @@ public class MainNote extends NoteBaseActivity {
                         .hideSoftInputFromWindow(getCurrentFocus()
                             .getWindowToken(),
                             InputMethodManager.HIDE_NOT_ALWAYS);
-                    noteUtil.openCamere(MainNote.this, dirPath);
+                    if (dirPath.startsWith(ConstantValue.SD_DIR_PATH)) {
+                        tmpPicPath = dirPath + System.currentTimeMillis()
+                            + ConstantValue.FILE_EX_NAME_PNG;
+                    } else {
+                        tmpPicPath = ConstantValue.SD_DIR_PATH + dirPath
+                            + System.currentTimeMillis()
+                            + ConstantValue.FILE_EX_NAME_PNG;
+                    }
+                    noteUtil.openCamere(MainNote.this, tmpPicPath);
                 } else if (v.equals(picture)) {
                     Intent picIntent = new Intent(MainNote.this,
                         PicImgActivity.class);
@@ -315,12 +341,37 @@ public class MainNote extends NoteBaseActivity {
             switch (requestCode) {
                 case NoteUtil.REQUEST_CODE_CAMERE:
                     if (resultCode == RESULT_OK) {
-                        String fileName = data
-                            .getStringExtra("ConstantValue.CURRENT_SAVE_FILE");
-                        File camFile = FileManager.getFileInstance(dirPath,
-                            fileName);
-                        currentFiles.add(camFile);
+                        Intent it = new Intent(this, NoteService.class);
+                        it.putExtra(ConstantValue.BITMAP_PROCESS, "");
+                        it.putExtra(ConstantValue.FILE_PATH, tmpPicPath);
+                        it.putExtra(ConstantValue.SCREEN_WIDTH, screenWidth);
+                        it.putExtra(ConstantValue.SCREEN_HEIGHT, screenHeight);
+                        it.putExtra(ConstantValue.FILE_UTIL, fileUtil);
+                        it.putExtra(ConstantValue.ACTION_CAMERA, "");
+                        if (CommonUtil.getAndroidSDKVersion() < 14) {
+                            Cursor c = this
+                                .getContentResolver()
+                                .query(
+                                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                    null, null, null,
+                                    Media.DATE_MODIFIED + " desc");
+
+                            if (c.moveToFirst()) {
+                                String filePath = c.getString(c
+                                    .getColumnIndex(Media.DATA));
+                                Log.d(TAG, "real path is " + filePath);
+
+                                File file = new File(filePath);
+                                file.delete();
+
+                            }
+                        }
+
+                        startService(it);
+                        mDialogUtil.showProgress(this, MessageValue.TITLE_WAIT,
+                            MessageValue.SAVING_ATTACH, false);
                     }
+
                     break;
                 case NoteUtil.REQUEST_CODE_PICTURESTORE:
                     String fileName = data
@@ -352,6 +403,13 @@ public class MainNote extends NoteBaseActivity {
                     if (gestureFile != null && gestureFile.exists()) {
                         currentFiles.add(gestureFile);
                     }
+                    break;
+                case NoteUtil.REQUEST_CODE_PIC_EDIT:
+                    String picFileName = data
+                        .getStringExtra("ConstantValue.CURRENT_SAVE_FILE");
+                    File camFile = FileManager.getFileInstance(dirPath,
+                        picFileName);
+                    currentFiles.add(camFile);
                     break;
                 default:
                     break;
@@ -483,5 +541,54 @@ public class MainNote extends NoteBaseActivity {
     // }
     //
     // }
+
+    protected class BitmapProcessReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                mDialogUtil.dismissProgress();
+                if (intent.hasExtra(ConstantValue.RESULT_ERR)) {
+                    Toast.makeText(MainNote.this,
+                        MessageValue.ADD_ATTACH_FAILED, Toast.LENGTH_LONG)
+                        .show();
+                } else {
+                    Toast.makeText(MainNote.this, MessageValue.ADD_ATTACH_SUC,
+                        Toast.LENGTH_LONG).show();
+                    String bitmapFilePath = null;
+                    if (dirPath.startsWith(ConstantValue.SD_DIR_PATH)) {
+                        bitmapFilePath = dirPath
+                            + intent
+                                .getStringExtra(ConstantValue.BITMAP_FILE_PATH);
+                    } else {
+                        bitmapFilePath = ConstantValue.SD_DIR_PATH
+                            + dirPath
+                            + intent
+                                .getStringExtra(ConstantValue.BITMAP_FILE_PATH);
+                    }
+
+                    Intent it = new Intent();
+                    it.setClass(MainNote.this, CameraImgActivity.class);
+                    it.putExtra(ConstantValue.CAMERA_BIT_TMP_PATH,
+                        bitmapFilePath);
+                    startActivityForResult(it, NoteUtil.REQUEST_CODE_PIC_EDIT);
+                    // filePath = bitmapFilePath;
+                    // Log.d(TAG, filePath);
+                    // fileName = filePath.substring(
+                    // filePath.lastIndexOf("/") + 1, filePath.length());
+                    // bitmapFile = new File(bitmapFilePath);
+                    // bitmap = BitmapFactory.decodeFile(bitmapFilePath);
+                    // siv.setImageBitmap(bitmap);
+                    // state = RESULT_OK;
+                    // btnBar.setVisibility(View.VISIBLE);
+                    // isOpen = false;
+
+                }
+            } catch (Throwable e) {
+                Log.e(TAG, "on receive exception", e);
+            }
+        }
+
+    }
 
 }
