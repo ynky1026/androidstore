@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -49,11 +48,6 @@ public class ImgAttachDetailCheck extends NoteBaseActivity {
      * ScrollImageView组件
      */
     protected ScrollImageView siv;
-
-    /**
-     * ImageView
-     */
-    private ImageView iv;
 
     /**
      * 左旋按钮
@@ -133,8 +127,6 @@ public class ImgAttachDetailCheck extends NoteBaseActivity {
     protected void init() {
         siv = ( ScrollImageView ) findViewById(R.id.scrolliv);
         siv.setVisibility(View.VISIBLE);
-        iv = ( ImageView ) findViewById(R.id.iv);
-        iv.setVisibility(View.GONE);
         dirPath = getIntent().getStringExtra(ConstantValue.DIR_PATH);
         if (!dirPath.endsWith("/")) {// 如果dirpath结尾没有"/"则添加
             dirPath = dirPath + "/";

@@ -18,8 +18,7 @@
             android:id="@+id/scrolliv"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:scaleType="fitCenter"
-            android:visibility="gone" />
+            android:scaleType="fitCenter"/>
 
         <!-- <ImageView
             android:id="@+id/iv"

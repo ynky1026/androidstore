@@ -160,13 +160,13 @@ containing a value of this type.
     public static final class id {
         public static final int add=0x7f06002b;
         public static final int audio=0x7f060018;
-        public static final int btnbar=0x7f060002;
+        public static final int btnbar=0x7f060001;
         public static final int camera=0x7f060019;
         public static final int check=0x7f06001c;
         public static final int checknote=0x7f060032;
         public static final int content=0x7f060011;
         public static final int date=0x7f060022;
-        public static final int del=0x7f060006;
+        public static final int del=0x7f060005;
         public static final int delbtn=0x7f060009;
         public static final int delete=0x7f06000f;
         public static final int enter=0x7f06000d;
@@ -177,7 +177,7 @@ containing a value of this type.
         public static final int imgbrower=0x7f060033;
         public static final int imgflipper=0x7f060010;
         public static final int item=0x7f06000b;
-        public static final int iv=0x7f060001;
+        public static final int iv=0x7f060006;
         public static final int left_button=0x7f06001e;
         public static final int length=0x7f060007;
         public static final int lv=0x7f06000a;
@@ -192,7 +192,7 @@ containing a value of this type.
         public static final int record=0x7f06002c;
         public static final int resume=0x7f060030;
         public static final int right_button=0x7f06001f;
-        public static final int save=0x7f060005;
+        public static final int save=0x7f060004;
         public static final int scrolliv=0x7f060000;
         public static final int sec=0x7f060027;
         public static final int size=0x7f060008;
@@ -205,8 +205,8 @@ containing a value of this type.
         public static final int textlayout=0x7f060013;
         public static final int time_calculator=0x7f060023;
         public static final int title=0x7f060017;
-        public static final int toLeft=0x7f060003;
-        public static final int toRight=0x7f060004;
+        public static final int toLeft=0x7f060002;
+        public static final int toRight=0x7f060003;
         public static final int vbtn=0x7f060014;
         public static final int wheel_left=0x7f060028;
         public static final int wheel_right=0x7f060029;

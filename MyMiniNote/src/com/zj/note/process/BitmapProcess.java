@@ -58,6 +58,7 @@ public class BitmapProcess implements Runnable {
             }
             //将bitmap生产png图片保存在磁盘上
             boolean flag = fileUtil.saveBitmap2PNG(picBitmap, fileName);
+            picBitmap.recycle();
             if (flag) {
                 intent.putExtra(ConstantValue.RESULT_OK, "");
             } else {
