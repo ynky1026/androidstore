@@ -1,4 +1,4 @@
-package com.zj.note.test;
+package com.zj.note.main;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
