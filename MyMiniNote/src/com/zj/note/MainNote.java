@@ -432,6 +432,10 @@ public class MainNote extends NoteBaseActivity {
 	@Override
 	public void finish() {
 		try {
+			if (bitmapReceiver != null) {
+				unregisterReceiver(bitmapReceiver);
+				bitmapReceiver = null;
+			}
 			if (!hasSaved) {
 				mDialogUtil.showAlertDialog(this, 0, MessageValue.TITLE_HINT,
 						MessageValue.CONFIRM,
@@ -492,6 +496,10 @@ public class MainNote extends NoteBaseActivity {
 		Log.d(TAG, "onDestroy");
 		try {
 			super.onDestroy();
+			if (bitmapReceiver != null) {
+				unregisterReceiver(bitmapReceiver);
+				bitmapReceiver = null;
+			}
 			// if (receiver != null) {
 			// unregisterReceiver(receiver);
 			// receiver = null;

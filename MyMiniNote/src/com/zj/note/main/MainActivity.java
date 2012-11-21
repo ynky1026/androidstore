@@ -3,7 +3,7 @@ package com.zj.note.main;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 
 import com.zj.note.NoteUtil;
 import com.zj.note.R;
@@ -14,7 +14,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        LinearLayout open = ( LinearLayout ) findViewById(R.id.opennote);
+        ImageView open = ( ImageView ) findViewById(R.id.opennote);
         // Button check = ( Button ) findViewById(R.id.checknote);
 
         final NoteUtil noteUtil = new NoteUtil(new MyDialog());
@@ -29,7 +29,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        LinearLayout check = ( LinearLayout ) findViewById(R.id.checknote);
+        ImageView check = ( ImageView ) findViewById(R.id.checknote);
         check.setOnClickListener(new OnClickListener() {
 
             @Override
