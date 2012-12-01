@@ -98,8 +98,9 @@ public class NoteListCheck extends Activity {
         }
 
         if (list == null || list.size() == 0) {
-            Toast.makeText(this, MessageValue.NO_NOTE, Toast.LENGTH_LONG)
-                .show();
+        	
+//            Toast.makeText(this, MessageValue.NO_NOTE, Toast.LENGTH_LONG)
+//                .show();
         } else {
             Collections.sort(list,
                 new FileComparator(FileComparator.FILE_LAST_MODIFY_TIME,

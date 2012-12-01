@@ -1,10 +1,11 @@
 package com.zj.note;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-public class NoteBaseActivity extends Activity {
+import com.zj.note.main.BaseActivity;
+
+public class NoteBaseActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

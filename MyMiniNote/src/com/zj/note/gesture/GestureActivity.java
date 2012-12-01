@@ -162,11 +162,6 @@ public class GestureActivity extends NoteBaseActivity implements
     private String fileName;
 
     /**
-     * 弹出窗工具
-     */
-    private GestureDialogUtil mDialogUtil;
-
-    /**
      * 保存手写笔记广播接收器
      */
     private GestureSaveBroadcastReceiver receiver;
@@ -234,9 +229,6 @@ public class GestureActivity extends NoteBaseActivity implements
 
         fileName = ConstantValue.GESTURE_NAME + System.currentTimeMillis()
             + ConstantValue.FILE_EX_NAME_PNG;
-
-        mDialogUtil = new GestureDialogUtil(NoteUtil.mDialogInterface);
-
         receiver = new GestureSaveBroadcastReceiver();
         IntentFilter ift = new IntentFilter(ConstantValue.GESTURE_SAVE_RESULT);
         registerReceiver(receiver, ift);
@@ -345,7 +337,7 @@ public class GestureActivity extends NoteBaseActivity implements
             startService(it);
             // fileManager.saveBitmap2PNG(allBitmap, fileName);
 
-            mDialogUtil.showProgress(GestureActivity.this,
+            showProgressDialog(GestureActivity.this,
                 MessageValue.TITLE_WAIT, MessageValue.SAVING, false);
         } else {
             Toast.makeText(this, MessageValue.NO_GESTURE, 1000).show();
@@ -524,7 +516,7 @@ public class GestureActivity extends NoteBaseActivity implements
         public void onReceive(Context context, Intent intent) {
             try {
                 Log.d(TAG, "receive");
-                mDialogUtil.dismissProgress();
+                dismissProgress();
                 if (intent.hasExtra("RESULT_ERR")) {
                     Toast.makeText(GestureActivity.this,
                         MessageValue.SAVE_FAILED, Toast.LENGTH_LONG).show();
@@ -545,7 +537,7 @@ public class GestureActivity extends NoteBaseActivity implements
     @Override
     public void finish() {
         try {
-            mDialogUtil.showAlertDialog(this, 0, MessageValue.TITLE_HINT,
+            showAlertDialog(0, MessageValue.TITLE_HINT,
                 MessageValue.YES, new DialogInterface.OnClickListener() {
 
                     @Override

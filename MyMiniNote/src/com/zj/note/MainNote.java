@@ -437,7 +437,7 @@ public class MainNote extends NoteBaseActivity {
 				bitmapReceiver = null;
 			}
 			if (!hasSaved) {
-				mDialogUtil.showAlertDialog(this, 0, MessageValue.TITLE_HINT,
+				showAlertDialog(0, MessageValue.TITLE_HINT,
 						MessageValue.CONFIRM,
 						new DialogInterface.OnClickListener() {
 

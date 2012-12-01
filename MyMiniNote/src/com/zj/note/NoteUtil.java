@@ -83,22 +83,6 @@ public class NoteUtil implements Serializable {
     public static final int NOT_ENOUGHT_SPACE = 2;
 
 
-
-    /**
-     * 构造方法
-     * 
-     * @param dialogInterface
-     */
-    public NoteUtil(DialogInterface dialogInterface) {
-        if (dialogInterface == null) {
-            throw new IllegalArgumentException("dialogUtil can not be null");
-        }
-
-        mDialogInterface = dialogInterface;
-    }
-
-
-
     NoteUtil() {
 
     }

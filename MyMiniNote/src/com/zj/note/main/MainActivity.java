@@ -1,41 +1,80 @@
 package com.zj.note.main;
 
+import com.zj.note.ConstantValue;
+import com.zj.note.MainNote;
+import com.zj.note.R;
+import com.zj.note.check.NoteListCheck;
+import com.zj.note.widget.MyViewFlipper;
+
+import android.app.ActivityGroup;
+import android.app.LocalActivityManager;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.ViewFlipper;
 
-import com.zj.note.NoteUtil;
-import com.zj.note.R;
+public class MainActivity extends ActivityGroup {
 
-public class MainActivity extends BaseActivity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+	/**
+	 * TAG
+	 */
+	private static final String TAG = "MainActivity";
 
-        ImageView open = ( ImageView ) findViewById(R.id.opennote);
-        // Button check = ( Button ) findViewById(R.id.checknote);
+	private TextView newnote;
 
-        final NoteUtil noteUtil = new NoteUtil(new MyDialog());
+	private TextView checknote;
 
-        open.setOnClickListener(new OnClickListener() {
+	private MyViewFlipper vf;
 
-            @Override
-            public void onClick(View v) {
+	private String dirPath;
 
-                noteUtil.openMainNote(MainActivity.this,
-                    "testnote/" + System.currentTimeMillis());
-            }
-        });
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		try {
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.main);
+			init();
+		} catch (Exception e) {
+			Log.e(TAG, "on Create error", e);
+		}
+	}
 
-        ImageView check = ( ImageView ) findViewById(R.id.checknote);
-        check.setOnClickListener(new OnClickListener() {
+	private void init() {
+		dirPath = getApplicationContext().getFilesDir().getAbsolutePath()
+				+ "/note_data/";
+		newnote = (TextView) findViewById(R.id.newnote);
+		checknote = (TextView) findViewById(R.id.checknote);
+		newnote.setOnClickListener(listener);
+		checknote.setOnClickListener(listener);
+		vf = (MyViewFlipper) findViewById(R.id.vf);
+		LocalActivityManager manager = getLocalActivityManager();
+		Intent it1 = new Intent(this, MainNote.class);
+		it1.putExtra(ConstantValue.DIR_PATH, dirPath);
+		vf.addView(manager.startActivity("newnote", it1).getDecorView(),0);
+		Intent it2 = new Intent(this, NoteListCheck.class);
+		it2.putExtra(ConstantValue.DIR_PATH, dirPath);
+		vf.addView(manager.startActivity("checknote", it2).getDecorView(),1);
+		
+	}
 
-            @Override
-            public void onClick(View v) {
-                noteUtil.checkNote(MainActivity.this, "testnote");
-            }
-        });
-    }
+	private OnClickListener listener = new OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			switch (v.getId()) {
+			case R.id.newnote:
+				vf.moveToView(0);
+				break;
+			case R.id.checknote:
+				vf.moveToView(1);
+				break;
+			default:
+				break;
+			}
+		}
+	};
 }

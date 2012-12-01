@@ -148,10 +148,10 @@ public class NoteListAdapter extends BaseAdapter {
                     nameText.setText(fileBitmap.getWidth() + "*"
                         + fileBitmap.getHeight());
                 } else {
-                    int time = ( Integer ) Session.get(filePath);
+//                    int time = ( Integer ) Session.get(filePath);
                     iv.setImageResource(R.drawable.icon_audio);
-                    String timeLength = formatSecNum(time);
-                    nameText.setText(timeLength);
+//                    String timeLength = formatSecNum(time);
+//                    nameText.setText(timeLength);
                 }
                 dateText.setText(String.valueOf(fileLength / 1024)
                     + ConstantValue.FILE_SIZE);
