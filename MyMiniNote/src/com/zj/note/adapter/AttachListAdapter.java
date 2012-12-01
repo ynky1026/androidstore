@@ -21,8 +21,8 @@ import android.widget.TextView;
 import com.zj.note.CommonUtil;
 import com.zj.note.ConstantValue;
 import com.zj.note.MessageValue;
-import com.zj.note.NoteUtil;
 import com.zj.note.R;
+import com.zj.note.check.AttachListCheck;
 import com.zj.note.manager.BitmapManager;
 import com.zj.note.manager.FileManager;
 
@@ -34,7 +34,6 @@ public class AttachListAdapter extends BaseAdapter {
 
     private Context mContext;
 
-    private AdapterDialogUtil mDialogUtil;
 
     private SharedPreferences sp;
 
@@ -44,7 +43,6 @@ public class AttachListAdapter extends BaseAdapter {
         mList = list;
         mContext = context;
 
-        mDialogUtil = new AdapterDialogUtil(NoteUtil.mDialogInterface);
 
         sp = mContext.getSharedPreferences(ConstantValue.RECORD_FILE_TIME,
             Context.MODE_PRIVATE);
@@ -187,7 +185,7 @@ public class AttachListAdapter extends BaseAdapter {
 
                 };
 
-                mDialogUtil.showAlertDialog(mContext, -1,
+                ((AttachListCheck)mContext).showAlertDialog( -1,
                     MessageValue.TITLE_HINT, MessageValue.CONFIRM,
                     positiveListener, MessageValue.CANCLE, negativeListener,
                     MessageValue.CONFIRM_ATTACH_DEL);

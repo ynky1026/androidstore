@@ -15,7 +15,6 @@ import com.zj.note.service.NoteService;
 
 public class PicImgActivity extends CameraImgActivity {
 
-    private PicImgDialogUtil mDialogUtil;
 
 
 
@@ -23,7 +22,6 @@ public class PicImgActivity extends CameraImgActivity {
     protected void onCreate(Bundle savedInstanceState) {
         hintDrawable = R.drawable.icon_picture_big;
         super.onCreate(savedInstanceState);
-        mDialogUtil = new PicImgDialogUtil(NoteUtil.mDialogInterface);
     }
 
 
@@ -53,7 +51,7 @@ public class PicImgActivity extends CameraImgActivity {
             it.putExtra(ConstantValue.FILE_UTIL, fileUtil);
 
             startService(it);
-            mDialogUtil.showProgress(this, MessageValue.TITLE_WAIT,
+            showProgressDialog(this, MessageValue.TITLE_WAIT,
                 MessageValue.SAVING_ATTACH, false);
 
         }

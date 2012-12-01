@@ -31,7 +31,6 @@ import com.zj.note.CommonUtil;
 import com.zj.note.ConstantValue;
 import com.zj.note.MessageValue;
 import com.zj.note.NoteBaseActivity;
-import com.zj.note.NoteUtil;
 import com.zj.note.R;
 import com.zj.note.Session;
 import com.zj.note.adapter.GestureInputAdapter;
@@ -340,7 +339,7 @@ public class GestureActivity extends NoteBaseActivity implements
             showProgressDialog(GestureActivity.this,
                 MessageValue.TITLE_WAIT, MessageValue.SAVING, false);
         } else {
-            Toast.makeText(this, MessageValue.NO_GESTURE, 1000).show();
+            Toast.makeText(this, MessageValue.NO_GESTURE, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -433,7 +432,7 @@ public class GestureActivity extends NoteBaseActivity implements
     public void onGesturePerformed(MyGestureView overlay, Gesture gesture) {
         try {
             if (count > 150) {
-                Toast.makeText(this, MessageValue.GESTURE_TOOLONG, 1000).show();
+                Toast.makeText(this, MessageValue.GESTURE_TOOLONG, Toast.LENGTH_LONG).show();
                 return;
             }
             ArrayList<GestureStroke> strokes = gesture.getStrokes();

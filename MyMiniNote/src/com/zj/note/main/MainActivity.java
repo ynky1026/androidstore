@@ -1,21 +1,21 @@
 package com.zj.note.main;
 
-import com.zj.note.ConstantValue;
-import com.zj.note.MainNote;
-import com.zj.note.R;
-import com.zj.note.check.NoteListCheck;
-import com.zj.note.widget.MyViewFlipper;
-
 import android.app.ActivityGroup;
 import android.app.LocalActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.View.OnTouchListener;
 import android.widget.TextView;
-import android.widget.ViewFlipper;
+
+import com.zj.note.ConstantValue;
+import com.zj.note.MainNote;
+import com.zj.note.R;
+import com.zj.note.check.NoteListCheck;
+import com.zj.note.widget.MyViewFlipper;
 
 public class MainActivity extends ActivityGroup {
 
@@ -54,11 +54,14 @@ public class MainActivity extends ActivityGroup {
 		LocalActivityManager manager = getLocalActivityManager();
 		Intent it1 = new Intent(this, MainNote.class);
 		it1.putExtra(ConstantValue.DIR_PATH, dirPath);
-		vf.addView(manager.startActivity("newnote", it1).getDecorView(),0);
+		View v1 = manager.startActivity("newnote", it1).getDecorView();
+		vf.addView(v1,0);
 		Intent it2 = new Intent(this, NoteListCheck.class);
 		it2.putExtra(ConstantValue.DIR_PATH, dirPath);
-		vf.addView(manager.startActivity("checknote", it2).getDecorView(),1);
-		
+		View v2 = manager.startActivity("checknote", it2).getDecorView();
+		vf.addView(v2,1);
+		v1.setOnTouchListener(touchListener);
+		v2.setOnTouchListener(touchListener);
 	}
 
 	private OnClickListener listener = new OnClickListener() {
@@ -75,6 +78,16 @@ public class MainActivity extends ActivityGroup {
 			default:
 				break;
 			}
+		}
+	};
+	
+	private OnTouchListener touchListener = new OnTouchListener() {
+		
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			Log.d(TAG, "touch is run");
+			vf.dispatchTouchEvent(event);
+			return true;
 		}
 	};
 }

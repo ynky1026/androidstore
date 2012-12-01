@@ -46,11 +46,6 @@ public class CameraImgActivity extends ImgAttachDetailCheck {
 	protected NoteUtil noteUtil;
 
 	/**
-	 * 弹出窗工具类
-	 */
-	private CameraImgDialogUtil mDialogUtil;
-
-	/**
 	 * 屏幕宽
 	 */
 	protected int screenWidth;
@@ -113,7 +108,6 @@ public class CameraImgActivity extends ImgAttachDetailCheck {
 		screenHeight = getIntent().getIntExtra(ConstantValue.SCREEN_HEIGHT, 0);
 		fileUtil = (FileManager) getIntent().getSerializableExtra(
 				ConstantValue.FILE_UTIL);
-		mDialogUtil = new CameraImgDialogUtil(NoteUtil.mDialogInterface);
 
 		siv = (ScrollImageView) findViewById(R.id.scrolliv);
 		leftBtn = (ImageButton) findViewById(R.id.toLeft);
@@ -191,7 +185,7 @@ public class CameraImgActivity extends ImgAttachDetailCheck {
 		it.putExtra(ConstantValue.FILE_NAME, fileName);
 		Session.put(ConstantValue.IMG_BITMAP, bitmap);
 		startService(it);
-		mDialogUtil.showProgress(CameraImgActivity.this,
+		showProgressDialog(CameraImgActivity.this,
 				MessageValue.TITLE_WAIT, MessageValue.SAVING, false);
 	}
 
@@ -220,7 +214,7 @@ public class CameraImgActivity extends ImgAttachDetailCheck {
 		public void onReceive(Context context, Intent intent) {
 			try {
 				Log.d(TAG, "receive");
-				mDialogUtil.dismissProgress();
+				dismissProgress();
 				if (intent.hasExtra("RESULT_ERR")) {
 					Toast.makeText(CameraImgActivity.this,
 							MessageValue.SAVE_FAILED, Toast.LENGTH_LONG).show();

@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.zj.note.ConstantValue;
 import com.zj.note.MessageValue;
 import com.zj.note.NoteBaseActivity;
-import com.zj.note.NoteUtil;
 import com.zj.note.R;
 import com.zj.note.Session;
 import com.zj.note.manager.BitmapManager;
@@ -94,10 +93,6 @@ public class ImgAttachDetailCheck extends NoteBaseActivity {
      */
     private String fileName;
 
-    /**
-     * 弹出窗工具
-     */
-    private AttachDialogUtil mDialogUtil;
 
     /**
      * 图片保存广播接收器
@@ -169,7 +164,6 @@ public class ImgAttachDetailCheck extends NoteBaseActivity {
         }
 
         siv.setImageBitmap(bitmap);
-        mDialogUtil = new AttachDialogUtil(NoteUtil.mDialogInterface);
 
         receiver = new ImgSaveReceiver();
         IntentFilter ift = new IntentFilter(ConstantValue.IMG_SAVE_RESULT);
@@ -220,7 +214,7 @@ public class ImgAttachDetailCheck extends NoteBaseActivity {
         it.putExtra(ConstantValue.FILE_NAME, fileName);
         Session.put(ConstantValue.IMG_BITMAP, bitmap);
         startService(it);
-        mDialogUtil.showProgress(ImgAttachDetailCheck.this,
+        showProgressDialog(ImgAttachDetailCheck.this,
             MessageValue.TITLE_WAIT, MessageValue.SAVING, false);
     }
 
@@ -251,7 +245,7 @@ public class ImgAttachDetailCheck extends NoteBaseActivity {
         public void onReceive(Context context, Intent intent) {
             try {
                 Log.d(TAG, "receive");
-                mDialogUtil.dismissProgress();
+                dismissProgress();
                 if (intent.hasExtra("RESULT_ERR")) {
                     Toast.makeText(ImgAttachDetailCheck.this,
                         MessageValue.SAVE_FAILED, Toast.LENGTH_LONG).show();

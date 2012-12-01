@@ -87,7 +87,7 @@ public abstract class BaseActivity extends Activity {
 	}
 
 	
-	protected void showAlertDialog(int iconId, String title,
+	public void showAlertDialog(int iconId, String title,
 			String positiveButtonText,
 			DialogInterface.OnClickListener positiveListener,
 			String negativeButtonText,
@@ -166,7 +166,7 @@ public abstract class BaseActivity extends Activity {
 	 * @param formatArgs
 	 *            消息参数
 	 */
-	protected void showAlertDialog(int iconId, int titleId,
+	public void showAlertDialog(int iconId, int titleId,
 			int positiveButtonTextId,
 			DialogInterface.OnClickListener positiveListener, int msgId,
 			Object... formatArgs) {

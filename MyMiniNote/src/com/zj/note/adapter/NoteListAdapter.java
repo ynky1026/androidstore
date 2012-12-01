@@ -9,6 +9,7 @@ import java.util.Locale;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -24,9 +25,8 @@ import android.widget.TextView;
 import com.zj.note.CommonUtil;
 import com.zj.note.ConstantValue;
 import com.zj.note.MessageValue;
-import com.zj.note.NoteUtil;
 import com.zj.note.R;
-import com.zj.note.Session;
+import com.zj.note.check.NoteListCheck;
 import com.zj.note.manager.BitmapManager;
 import com.zj.note.manager.FileManager;
 
@@ -38,15 +38,13 @@ public class NoteListAdapter extends BaseAdapter {
 
     private Context mContext;
 
-    private AdapterDialogUtil mDialogUtil;
-
+    private SharedPreferences sp;
 
 
     public NoteListAdapter(Context context, List<File> list) {
         mList = list;
         mContext = context;
-
-        mDialogUtil = new AdapterDialogUtil(NoteUtil.mDialogInterface);
+        sp = mContext.getSharedPreferences(ConstantValue.RECORD_FILE_TIME, Context.MODE_PRIVATE);
     }
 
 
@@ -148,10 +146,10 @@ public class NoteListAdapter extends BaseAdapter {
                     nameText.setText(fileBitmap.getWidth() + "*"
                         + fileBitmap.getHeight());
                 } else {
-//                    int time = ( Integer ) Session.get(filePath);
+                    int time = sp.getInt(filePath, 0);
                     iv.setImageResource(R.drawable.icon_audio);
-//                    String timeLength = formatSecNum(time);
-//                    nameText.setText(timeLength);
+                    String timeLength = formatSecNum(time);
+                    nameText.setText(timeLength);
                 }
                 dateText.setText(String.valueOf(fileLength / 1024)
                     + ConstantValue.FILE_SIZE);
@@ -223,7 +221,7 @@ public class NoteListAdapter extends BaseAdapter {
 
                 };
 
-                mDialogUtil.showAlertDialog(mContext, -1,
+                ((NoteListCheck)mContext).showAlertDialog(-1,
                     MessageValue.TITLE_HINT, MessageValue.CONFIRM,
                     positiveListener, MessageValue.CANCLE, negativeListener,
                     MessageValue.CONFIRM_ATTACH_DEL);

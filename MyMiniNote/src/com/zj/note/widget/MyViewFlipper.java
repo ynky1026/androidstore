@@ -64,21 +64,18 @@ public class MyViewFlipper extends ViewGroup {
 	public MyViewFlipper(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		scroller = new Scroller(context);
-		tracker = VelocityTracker.obtain();
 	}
 
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
-		if (changed) {
-			int left = 0;
-			int childCount = this.getChildCount();
-			for (int i = 0; i < childCount; i++) {
-				View child = this.getChildAt(i);
-				child.layout(left, 0, left + this.getMeasuredWidth(),
-						this.getMeasuredHeight());
-				left += this.getMeasuredWidth();
-				Log.d(TAG, "left is " + left);
-			}
+		int left = 0;
+		int childCount = this.getChildCount();
+		for (int i = 0; i < childCount; i++) {
+			View child = this.getChildAt(i);
+			child.layout(left, 0, left + this.getMeasuredWidth(),
+					this.getMeasuredHeight());
+			left += this.getMeasuredWidth();
+			Log.d(TAG, "left is " + left);
 		}
 	}
 
@@ -119,9 +116,13 @@ public class MyViewFlipper extends ViewGroup {
 	}
 
 	@Override
-	public boolean dispatchTouchEvent(MotionEvent event) {
+	public boolean onTouchEvent(MotionEvent event) {
+		Log.d(TAG, "touch event");
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
+			if (tracker == null) {
+				tracker = VelocityTracker.obtain();
+			}
 			lastX = event.getX();
 			tracker.addMovement(event);
 			break;
@@ -152,13 +153,47 @@ public class MyViewFlipper extends ViewGroup {
 			} else {
 				moveToView(curPosition);
 			}
-			tracker.clear();
-			tracker.recycle();
+			if (tracker != null) {
+				tracker.clear();
+				tracker.recycle();
+				tracker = null;
+			}
+
 			break;
 		default:
 			break;
 		}
 		return true;
+	}
+
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent ev) {
+		boolean isMove = false;
+		switch (ev.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			Log.d(TAG, "action down");
+			if (tracker == null) {
+				tracker = VelocityTracker.obtain();
+			}
+			lastX = ev.getX();
+			tracker.addMovement(ev);
+			break;
+		case MotionEvent.ACTION_MOVE:
+			Log.d(TAG, "action move");
+			isMove = true;
+			break;
+		case MotionEvent.ACTION_UP:
+			Log.d(TAG, "action up");
+			if (tracker != null) {
+				tracker.clear();
+				tracker.recycle();
+				tracker = null;
+			}
+			break;
+		default:
+			break;
+		}
+		return isMove;
 	}
 
 	/**

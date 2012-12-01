@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,9 +22,10 @@ import com.zj.note.MessageValue;
 import com.zj.note.R;
 import com.zj.note.adapter.NoteListAdapter;
 import com.zj.note.audio.RecordActivity;
+import com.zj.note.main.BaseActivity;
 import com.zj.note.manager.FileManager;
 
-public class NoteListCheck extends Activity {
+public class NoteListCheck extends BaseActivity {
 
     /**
      * TAG

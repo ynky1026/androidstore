@@ -63,11 +63,6 @@ public class NoteUtil implements Serializable {
     public static final int REQUEST_CODE_PIC_EDIT = 4;
 
     /**
-     * 弹出窗接口
-     */
-    public static DialogInterface mDialogInterface;
-
-    /**
      * 状态sd卡已插入 并且有足够剩余空间
      */
     public static final int FINE_SDCARD = 0;

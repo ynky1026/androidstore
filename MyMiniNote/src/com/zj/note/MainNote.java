@@ -147,10 +147,6 @@ public class MainNote extends NoteBaseActivity {
 	 */
 	private NoteUtil noteUtil;
 
-	/**
-	 * 弹出窗工具类
-	 */
-	private DialogUtil mDialogUtil;
 
 	// /**
 	// * 图片处理线程广播接收器
@@ -219,7 +215,6 @@ public class MainNote extends NoteBaseActivity {
 		screenHeight = metrics.heightPixels;
 		screenWidth = metrics.widthPixels;
 
-		mDialogUtil = new DialogUtil(NoteUtil.mDialogInterface);
 		bitmapReceiver = new BitmapProcessReceiver();
 		IntentFilter ift = new IntentFilter(ConstantValue.BITMAP_PROCESS_RESULT);
 		registerReceiver(bitmapReceiver, ift);
@@ -378,7 +373,7 @@ public class MainNote extends NoteBaseActivity {
 					}
 
 					startService(it);
-					mDialogUtil.showProgress(this, MessageValue.TITLE_WAIT,
+					showProgressDialog(this, MessageValue.TITLE_WAIT,
 							MessageValue.SAVING_ATTACH, false);
 				}
 
@@ -562,7 +557,7 @@ public class MainNote extends NoteBaseActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			try {
-				mDialogUtil.dismissProgress();
+				dismissProgress();
 				if (intent.hasExtra(ConstantValue.RESULT_ERR)) {
 					Toast.makeText(MainNote.this,
 							MessageValue.ADD_ATTACH_FAILED, Toast.LENGTH_LONG)
