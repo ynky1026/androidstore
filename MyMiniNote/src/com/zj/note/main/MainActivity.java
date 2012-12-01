@@ -4,11 +4,11 @@ import android.app.ActivityGroup;
 import android.app.LocalActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
-import android.view.MotionEvent;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.TextView;
 
 import com.zj.note.ConstantValue;
@@ -44,8 +44,18 @@ public class MainActivity extends ActivityGroup {
 	}
 
 	private void init() {
-		dirPath = getApplicationContext().getFilesDir().getAbsolutePath()
+		dirPath = Environment.getExternalStorageDirectory().getPath()
 				+ "/note_data/";
+		// File directory = new File(dirPath);
+		// if (!directory.exists()) {
+		// directory.mkdir();
+		// }
+
+		String parentDir = dirPath + System.currentTimeMillis();
+		// File noteDir = new File(parentDir);
+		// if (!noteDir.exists()) {
+		// noteDir.mkdir();
+		// }
 		newnote = (TextView) findViewById(R.id.newnote);
 		checknote = (TextView) findViewById(R.id.checknote);
 		newnote.setOnClickListener(listener);
@@ -53,15 +63,15 @@ public class MainActivity extends ActivityGroup {
 		vf = (MyViewFlipper) findViewById(R.id.vf);
 		LocalActivityManager manager = getLocalActivityManager();
 		Intent it1 = new Intent(this, MainNote.class);
-		it1.putExtra(ConstantValue.DIR_PATH, dirPath);
+
+		it1.putExtra(ConstantValue.DIR_PATH, parentDir);
+		Log.d(TAG, "parentDir is " + parentDir);
 		View v1 = manager.startActivity("newnote", it1).getDecorView();
-		vf.addView(v1,0);
+		vf.addView(v1, 0);
 		Intent it2 = new Intent(this, NoteListCheck.class);
 		it2.putExtra(ConstantValue.DIR_PATH, dirPath);
 		View v2 = manager.startActivity("checknote", it2).getDecorView();
-		vf.addView(v2,1);
-		v1.setOnTouchListener(touchListener);
-		v2.setOnTouchListener(touchListener);
+		vf.addView(v2, 1);
 	}
 
 	private OnClickListener listener = new OnClickListener() {
@@ -80,14 +90,19 @@ public class MainActivity extends ActivityGroup {
 			}
 		}
 	};
-	
-	private OnTouchListener touchListener = new OnTouchListener() {
-		
-		@Override
-		public boolean onTouch(View v, MotionEvent event) {
-			Log.d(TAG, "touch is run");
-			vf.dispatchTouchEvent(event);
-			return true;
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		Log.d(TAG, "finish");
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			MainNote a1 = (MainNote) getLocalActivityManager().getActivity(
+					"newnote");
+			a1.finish();
+			NoteListCheck a2 = (NoteListCheck) getLocalActivityManager()
+					.getActivity("checknote");
+			a2.finish();
 		}
+
+		return true;
 	};
 }

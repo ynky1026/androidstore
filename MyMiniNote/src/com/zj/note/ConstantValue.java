@@ -263,11 +263,6 @@ public class ConstantValue {
     public static final String CURRENT_SAVE_FILE = "CURRENT_SAVE_FILE";
 
     /**
-     * 目录路径
-     */
-    public static final String SD_DIR_PATH = "/sdcard/notewidget/";
-    
-    /**
      * sd卡最小空间
      */
     public static final long MIN_SDCARD_SPACE = 3145728;
@@ -281,4 +276,10 @@ public class ConstantValue {
      * 缩放处理后的照片
      */
     public static final String CAMERA_BIT_TMP_PATH = "cameraBitPath";
+    
+    
+    /**
+     * 广播 笔记发生改变
+     */
+    public static final String BROADCAST_NOTE_CHANGE = "broadcastNoteChange";
 }

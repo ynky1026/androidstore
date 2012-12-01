@@ -589,7 +589,6 @@ public class GestureActivity extends NoteBaseActivity implements
 //                ConstantValue.SD_DIR_PATH + dirPath + fileName);
 //        }
 
-        Log.d(TAG, ConstantValue.SD_DIR_PATH + dirPath + fileName);
         i.putExtras(b);
 
         this.setResult(RESULT_OK, i);

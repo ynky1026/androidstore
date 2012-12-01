@@ -42,14 +42,10 @@ public class FileManager implements Serializable {
 	 */
 	private String dirPath;
 
-	/**
-	 * 目录在sd卡的位置
-	 */
-	private static final String SD_DIR_PATH = ConstantValue.SD_DIR_PATH;
-
-	public FileManager(String pathID) {
+	public FileManager(String dirPath) {
 		try {
-			dirPath = getPathByPathId(pathID);
+			this.dirPath = dirPath;
+			Log.d(TAG, dirPath);
 			File dirFile = new File(dirPath);
 			if (!dirFile.exists()) {
 				dirFile.mkdirs();
@@ -65,10 +61,8 @@ public class FileManager implements Serializable {
 	 * @param pathID
 	 * @return
 	 */
-	public static File[] queryAttachByPathID(String pathID) {
+	public static File[] queryAttachByPathID(String dirPath) {
 		File[] files = null;
-		String dirPath = null;
-		dirPath = getPathByPathId(pathID);
 		File dirFile = new File(dirPath);
 		if (dirFile == null || !dirFile.exists() || !dirFile.isDirectory()) {
 			return null;
@@ -84,10 +78,8 @@ public class FileManager implements Serializable {
 	 * @param filter
 	 * @return
 	 */
-	public static File[] queryAttachByPathID(String pathID, FileFilter filter) {
+	public static File[] queryAttachByPathID(String dirPath, FileFilter filter) {
 		File[] files = null;
-		String dirPath = null;
-		dirPath = getPathByPathId(pathID);
 		File dirFile = new File(dirPath);
 		if (dirFile == null || !dirFile.exists() || !dirFile.isDirectory()) {
 			return null;
@@ -239,24 +231,7 @@ public class FileManager implements Serializable {
 		}
 	}
 
-	/**
-	 * 根据路径id取对应的路径
-	 * 
-	 * @param pathID
-	 * @return
-	 */
-	private static String getPathByPathId(String pathID) {
-		if (pathID.startsWith(ConstantValue.SD_DIR_PATH)) {
-			return pathID;
-		}
-		String dirPath = null;
-		if (pathID.endsWith("/")) {
-			dirPath = SD_DIR_PATH + pathID;
-		} else {
-			dirPath = SD_DIR_PATH + pathID + "/";
-		}
-		return dirPath;
-	}
+	
 
 	/**
 	 * 按路径删除文件
@@ -311,8 +286,7 @@ public class FileManager implements Serializable {
 	 * 
 	 * @param file
 	 */
-	public static void deleteDir(String pathID) {
-		String path = getPathByPathId(pathID);
+	public static void deleteDir(String path) {
 		File file = new File(path);
 		try {
 			if (!file.isDirectory()) {
@@ -356,8 +330,6 @@ public class FileManager implements Serializable {
 		// 创建Zip包
 		java.util.zip.ZipOutputStream outZip = null;
 		try {
-			srcFilePath = getPathByPathId(srcFilePath);
-			zipFilePath = getPathByPathId(zipFilePath);
 			outZip = new java.util.zip.ZipOutputStream(
 					new java.io.FileOutputStream(zipFilePath));
 
@@ -484,11 +456,7 @@ public class FileManager implements Serializable {
 		if (!dirID.endsWith("/")) {
 			dirID = dirID + "/";
 		}
-		if (dirID.startsWith(ConstantValue.SD_DIR_PATH)) {
-			absPath = dirID + name;
-		} else {
-			absPath = ConstantValue.SD_DIR_PATH + dirID + name;
-		}
+		absPath = dirID + name;
 		file = new File(absPath);
 		if (!file.exists()) {
 			return null;

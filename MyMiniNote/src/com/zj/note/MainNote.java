@@ -18,6 +18,7 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -146,7 +147,6 @@ public class MainNote extends NoteBaseActivity {
 	 * NoteUtil对象
 	 */
 	private NoteUtil noteUtil;
-
 
 	// /**
 	// * 图片处理线程广播接收器
@@ -279,14 +279,9 @@ public class MainNote extends NoteBaseActivity {
 							.hideSoftInputFromWindow(getCurrentFocus()
 									.getWindowToken(),
 									InputMethodManager.HIDE_NOT_ALWAYS);
-					if (dirPath.startsWith(ConstantValue.SD_DIR_PATH)) {
-						tmpPicPath = dirPath + System.currentTimeMillis()
-								+ ConstantValue.FILE_EX_NAME_PNG;
-					} else {
-						tmpPicPath = ConstantValue.SD_DIR_PATH + dirPath
-								+ System.currentTimeMillis()
-								+ ConstantValue.FILE_EX_NAME_PNG;
-					}
+
+					tmpPicPath = dirPath + System.currentTimeMillis()
+							+ ConstantValue.FILE_EX_NAME_PNG;
 					noteUtil.openCamere(MainNote.this, tmpPicPath);
 				} else if (v.equals(picture)) {
 					Intent picIntent = new Intent(MainNote.this,
@@ -325,6 +320,9 @@ public class MainNote extends NoteBaseActivity {
 
 						Toast.makeText(MainNote.this, MessageValue.SAVE_SUC,
 								Toast.LENGTH_LONG).show();
+						Intent it = new Intent(
+								ConstantValue.BROADCAST_NOTE_CHANGE);
+						sendBroadcast(it);
 					} catch (Throwable e) {
 						Toast.makeText(MainNote.this, MessageValue.SAVE_FAILED,
 								Toast.LENGTH_LONG).show();
@@ -423,9 +421,18 @@ public class MainNote extends NoteBaseActivity {
 		}
 
 	};
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 
 	@Override
 	public void finish() {
+		Log.d(TAG, "finish");
 		try {
 			if (bitmapReceiver != null) {
 				unregisterReceiver(bitmapReceiver);
@@ -442,15 +449,8 @@ public class MainNote extends NoteBaseActivity {
 								try {
 									dialog.dismiss();
 									MainNote.super.finish();
-									for (File file : currentFiles) {
-										if (file != null && file.exists()) {
-											if (file.isDirectory()) {
-												FileManager.deleteDir(file);
-											} else {
-												file.delete();
-											}
-										}
-									}
+									File curFile = new File(dirPath);
+									curFile.delete();
 
 									// if (receiver != null) {
 									// unregisterReceiver(receiver);
@@ -566,14 +566,8 @@ public class MainNote extends NoteBaseActivity {
 					Toast.makeText(MainNote.this, MessageValue.ADD_ATTACH_SUC,
 							Toast.LENGTH_LONG).show();
 					String bitmapFilePath = null;
-					if (dirPath.startsWith(ConstantValue.SD_DIR_PATH)) {
-						bitmapFilePath = dirPath
-								+ intent.getStringExtra(ConstantValue.BITMAP_FILE_PATH);
-					} else {
-						bitmapFilePath = ConstantValue.SD_DIR_PATH
-								+ dirPath
-								+ intent.getStringExtra(ConstantValue.BITMAP_FILE_PATH);
-					}
+					bitmapFilePath = dirPath
+							+ intent.getStringExtra(ConstantValue.BITMAP_FILE_PATH);
 
 					Intent it = new Intent();
 					it.setClass(MainNote.this, CameraImgActivity.class);
